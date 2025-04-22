@@ -2,27 +2,27 @@ import numpy as np
 import random
 from tqdm import tqdm
 
-def strict_portion(num_A,num_B,selection_n,loc_A, scale_A, loc_B, scale_B):
-    # 生成正态分布分数
-    #np.random.seed(42)  # 设置随机种子，确保结果可复现
-    scores_A = np.random.normal(loc=loc_A, scale=scale_A, size=num_A)  # A人分数，均值为70，标准差为10
-    scores_B = np.random.normal(loc=loc_B, scale=scale_B, size=num_B)  # B人分数，均值为60，标准差为15
+def strict_portion(num_A, num_B, selection_n, loc_A, scale_A, loc_B, scale_B):
+    # Generate normally distributed scores
 
-    # 创建A人和B人的标识
+    scores_A = np.random.normal(loc=loc_A, scale=scale_A, size=num_A)  # Scores for group A, mean=70, std=10
+    scores_B = np.random.normal(loc=loc_B, scale=scale_B, size=num_B)  # Scores for group B, mean=60, std=15
+
+    # Create labels for group A and B
     people_A = [('A', score) for score in scores_A]
     people_B = [('B', score) for score in scores_B]
 
-    # 混合A人和B人
+    # Combine group A and B
     all_people = people_A + people_B
 
-    # 随机挑选200人
+    # Randomly select 200 people
     random.shuffle(all_people)
     selected = all_people[:selection_n]
 
-    # 按分数排序
+    # Sort by score in descending order
     selected.sort(key=lambda x: x[1], reverse=True)
 
-    # 从200人中筛选出分数最高的4个A和1个B
+    # Select the top 4 A and 1 B from the selected group
     result_A = []
     result_B = []
     for person in selected:
@@ -33,14 +33,14 @@ def strict_portion(num_A,num_B,selection_n,loc_A, scale_A, loc_B, scale_B):
         if len(result_A) == 4 and len(result_B) == 1:
             break
 
-    # 输出结果
-    # print("分数最高的4个A：")
+    # Output results (commented out)
+    # print("Top 4 A scores:")
     # for person in result_A:
-    #     print(f"类型: {person[0]}, 分数: {person[1]:.2f}")
+    #     print(f"Type: {person[0]}, Score: {person[1]:.2f}")
     #
-    # print("\n分数最高的1个B：")
+    # print("\nTop 1 B score:")
     # for person in result_B:
-    #     print(f"类型: {person[0]}, 分数: {person[1]:.2f}")
+    #     print(f"Type: {person[0]}, Score: {person[1]:.2f}")
 
     # print(scores_A.mean())
     # print(scores_B.mean())
@@ -49,27 +49,27 @@ def strict_portion(num_A,num_B,selection_n,loc_A, scale_A, loc_B, scale_B):
 
 
 def monte_carlo_simulation(num_trials,
-                           num_A,num_B,
-                           selection_n = 200,
-                           loc_A = 70, scale_A = 10,
-                           loc_B = 70, scale_B = 10):
+                           num_A, num_B,
+                           selection_n=200,
+                           loc_A=70, scale_A=10,
+                           loc_B=70, scale_B=10):
     differences = []
 
-    np.random.seed(25)
+    np.random.seed(42)  # Set random seed to ensure reproducibility
 
     for _ in tqdm(range(num_trials), desc="Monte Carlo Simulation Progress"):
-        result_A, result_B = strict_portion(num_A,num_B,selection_n,loc_A, scale_A, loc_B, scale_B)
-        avg_score_A = np.mean([score for _, score in result_A])  # 计算result_A的平均分数
-        score_B = result_B[0][1]  # result_B只有一个元素，取其分数
-        difference = avg_score_A - score_B  # 计算差异
+        result_A, result_B = strict_portion(num_A, num_B, selection_n, loc_A, scale_A, loc_B, scale_B)
+        avg_score_A = np.mean([score for _, score in result_A])  # Calculate average score of result_A
+        score_B = result_B[0][1]  # Get score of the single element in result_B
+        difference = avg_score_A - score_B  # Calculate the difference
         differences.append(difference)
 
-    avg_difference = np.mean(differences)  # 计算所有差异的平均值
+    avg_difference = np.mean(differences)  # Calculate the average of all differences
     return avg_difference
 
-# 运行蒙特卡洛实验
+# Run Monte Carlo experiment
 num_trials = 100000
 num_A = 10000
 num_B = 1000
-avg_difference = monte_carlo_simulation(num_trials,num_A, num_B)
-print(f"经过{num_trials}次蒙特卡洛实验，result_A平均分数与result_B分数的平均差异为：{avg_difference:.4f}")
+avg_difference = monte_carlo_simulation(num_trials, num_A, num_B)
+print(f"After {num_trials} Monte Carlo trials, the average difference between result_A's average score and result_B's score is: {avg_difference:.4f}")
