@@ -7,4 +7,4 @@ A simple Monte Carlo simulation to explore how differences in group sizes and ta
 Written in Python using `numpy`. Simply run:
 
 ```bash
-python montecarlo_dei_simulation.py
+python DEI_mythink/MC.py
