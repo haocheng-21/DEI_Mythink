@@ -6,7 +6,7 @@ def strict_portion(num_A, num_B, selection_n, loc_A, scale_A, loc_B, scale_B):
     # Generate normally distributed scores
 
     scores_A = np.random.normal(loc=loc_A, scale=scale_A, size=num_A)  # Scores for group A, mean=70, std=10
-    scores_B = np.random.normal(loc=loc_B, scale=scale_B, size=num_B)  # Scores for group B, mean=60, std=15
+    scores_B = np.random.normal(loc=loc_B, scale=scale_B, size=num_B)  # Scores for group B, mean=70, std=10
 
     # Create labels for group A and B
     people_A = [('A', score) for score in scores_A]
